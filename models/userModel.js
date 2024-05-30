@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-
+import bcrypt from 'bcrypt'
 
 const addressSchema = new Schema({
   type: { type: String, enum: ['Home', 'Work', 'Other'] },
@@ -13,10 +13,9 @@ const addressSchema = new Schema({
 
 
 const userSchema = new Schema({
-  username: {
+  userName: {
     type: String,
     required: true,
-    unique: true
   },
   email: {
     type: String,
@@ -41,6 +40,11 @@ const userSchema = new Schema({
   phoneNumber: {
     type: String,
     unique: true
+  },
+  role: {
+    type: String,
+    enum: ['Admin', 'RestaurantAdmin', 'User'],
+    default: 'User'
   },
   dateOfBirth: {
     type: Date
@@ -74,7 +78,8 @@ const userSchema = new Schema({
   },
   orderHistory: [
     {
-      type: Schema.Types.ObjectId, ref: 'Order'
+      type: Schema.Types.ObjectId,
+      ref: 'Order'
     }
   ],
   paymentMethods: [
@@ -114,8 +119,30 @@ const userSchema = new Schema({
     timestamps: true
   });
 
+userSchema.pre('save', async function (next) {
+  try {
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(this.password, salt)
+    this.password = hashedPassword
+  } catch (error) {
+    next(error)
+  }
+})
+
+userSchema.methods.isValidPassword = async function (password) {
+  try {
+    return await bcrypt.compare(password, this.password)
+  } catch (error) {
+    throw error
+  }
+}
+
 const User = model('User', userSchema);
 module.exports = User;
+
+
+
+
 
 // Example
 /*
