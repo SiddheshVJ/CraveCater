@@ -1,4 +1,5 @@
-const paymentSchema = new mongoose.Schema({
+import { Schema, model } from "mongoose";
+const paymentSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -34,7 +35,7 @@ const paymentSchema = new mongoose.Schema({
 });
 
 const Payment = mongoose.model('Payment', paymentSchema);
-
+module.exports = Payment
 
 /*const paymentDocumentExample = {
   "_id": "60b8d295f1c2f4a8c1d42c83",

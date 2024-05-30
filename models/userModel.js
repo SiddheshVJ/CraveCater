@@ -1,36 +1,16 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model } from "mongoose";
+
 
 const addressSchema = new Schema({
-  type: {
-    type: String,
-    enum: ['Home', 'Work', 'Other'],
-    required: true
-  },
-  line1: {
-    type: String,
-    required: true
-  },
-  line2: {
-    type: String
-  },
-  city: {
-    type: String,
-    required: true
-  },
-  state: {
-    type: String,
-    required: true
-  },
-  zipCode: {
-    type: String,
-    required: true
-  },
-  country: {
-    type: String,
-    required: true
-  }
+  type: { type: String, enum: ['Home', 'Work', 'Other'] },
+  line1: { type: String },
+  line2: { type: String },
+  city: { type: String },
+  state: { type: String },
+  zipCode: { type: String },
+  country: { type: String }
 }, { _id: false });
+
 
 const userSchema = new Schema({
   username: {
@@ -41,7 +21,8 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    lowercase: true
   },
   password: {
     type: String,
@@ -49,19 +30,25 @@ const userSchema = new Schema({
   },
   firstName: {
     type: String,
-    required: true
+    required: true,
+    lowercase: true
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
+    lowercase: true
   },
   phoneNumber: {
-    type: String
+    type: String,
+    unique: true
   },
   dateOfBirth: {
     type: Date
   },
-  addresses: [addressSchema],
+  addresses: {
+    type: [addressSchema],
+    default: []
+  },
   preferredPaymentMethod: {
     type: String
   },
@@ -127,7 +114,7 @@ const userSchema = new Schema({
     timestamps: true
   });
 
-const User = mongoose.model('User', userSchema);
+const User = model('User', userSchema);
 module.exports = User;
 
 // Example

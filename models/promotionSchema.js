@@ -1,4 +1,6 @@
-const promotionSchema = new mongoose.Schema({
+import { Schema, model } from "mongoose";
+
+const promotionSchema = new Schema({
     restaurantId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Restaurant',
@@ -25,8 +27,8 @@ const promotionSchema = new mongoose.Schema({
     }
 });
 
-const Promotion = mongoose.model('Promotion', promotionSchema);
-
+const Promotion = model('Promotion', promotionSchema);
+module.exports = Promotion
 
 /*
 {

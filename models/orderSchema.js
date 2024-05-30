@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model } from "mongoose";
 
 const addressSchema = new Schema({
   type: {
@@ -102,7 +101,7 @@ orderSchema.pre('find', function () {
   this.populate('userId restaurantId menuItems.menuItemId');
 });
 
-const Order = mongoose.model('Order', orderSchema);
+const Order = model('Order', orderSchema);
 module.exports = Order;
 
 /*const addressDocumentExample = {

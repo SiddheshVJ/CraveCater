@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model } from "mongoose";
+
 
 const reviewSchema = new Schema({
   userId: {
@@ -35,7 +35,7 @@ reviewSchema.pre('find', function () {
   this.populate('userId restaurantId menuItemId');
 });
 
-const Review = mongoose.model('Review', reviewSchema);
+const Review = model('Review', reviewSchema);
 module.exports = Review;
 
 /*

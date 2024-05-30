@@ -1,4 +1,6 @@
-const notificationSchema = new mongoose.Schema({
+import { Schema, model } from "mongoose";
+
+const notificationSchema = new Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -18,8 +20,8 @@ const notificationSchema = new mongoose.Schema({
     }
 });
 
-const Notification = mongoose.model('Notification', notificationSchema);
-
+const Notification = model('Notification', notificationSchema);
+module.exports = Notification
 
 /*const notificationDocumentExample = {
   "_id": "60b8d295f1c2f4a8c1d42c82",

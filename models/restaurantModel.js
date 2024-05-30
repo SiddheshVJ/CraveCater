@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import { Schema, model } from "mongoose";
+
 
 const operatingHoursSchema = new Schema({
   day: {
@@ -47,9 +47,21 @@ const addressSchema = new Schema({
 });
 
 const restaurantSchema = new Schema({
+  restaurantUserName: {
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true
+  },
+  restaurantPassword: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
-    required: true
+    required: true,
+    lowercase: true
   },
   description: {
     type: String
@@ -58,7 +70,9 @@ const restaurantSchema = new Schema({
     type: String
   },
   email: {
-    type: String
+    type: String,
+    unique: true,
+    lowercase: true
   },
   address: addressSchema,
   operatingHours: [operatingHoursSchema],
@@ -90,7 +104,7 @@ const restaurantSchema = new Schema({
     timestamps: true
   });
 
-const Restaurant = mongoose.model('Restaurant', restaurantSchema);
+const Restaurant = model('Restaurant', restaurantSchema);
 module.exports = Restaurant;
 
 

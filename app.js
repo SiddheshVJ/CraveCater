@@ -8,8 +8,12 @@ import bodyParser from "body-parser";
 
 // Import database connection
 import { dbConnect } from "./configs/dbConnect";
+
 // Import error handlers
 import { errorHandler, notFound } from "./middlewares/errorHandler";
+
+// import routes 
+import { userRouter } from './routes/userRoutes'
 
 let app = express()
 configDotenv()
@@ -28,14 +32,18 @@ app.use(cookieParser())
 // app logs in app.log file
 app.use(morgan('dev', { stream: fs.createWriteStream('./app.log') }))
 
+// use imported routes here
+app.use('/api/v1/user', userRouter)
+
+app.get('/health', async (req, res) => {
+    res.send("<h1>Health Ok</h1>")
+})
+
 // error handling
 app.use(notFound)
 app.use(errorHandler)
 
 // Route for health checkup
-app.get('/health', () => {
-    return ("<h1>Health Ok</h1>")
-})
 
 // Run server
 app.listen(PORT, (err) => {
