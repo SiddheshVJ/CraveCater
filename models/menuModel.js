@@ -1,135 +1,32 @@
-import { Schema } from "mongoose";
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-
-const optionSchema = Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    additionalPrice: {
-        type: Number,
-        default: 0
-    }
-});
-
-const customizationSchema = Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    options: [optionSchema],
-    required: {
-        type: Boolean,
-        default: false
-    }, // Whether the customization is mandatory
-    multiple: {
-        type: Boolean,
-        default: false
-    } // Whether multiple options can be selected
-});
-
-const itemSchema = Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    imageUrl: {
-        type: String
-    },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
-    },
-    available: {
-        type: Boolean,
-        default: true
-    },
-    customizations: [customizationSchema]
-});
-
-const categorySchema = Schema({
-    name: {
-        type: String,
-        required: true
-    },
+const menuSchema = new Schema({
+    restaurantId: { type: Schema.Types.ObjectId, ref: 'Restaurant', required: true },
+    categoryId: { type: Schema.Types.ObjectId, ref: 'Category' },
+    name: { type: String, required: true },
     description: { type: String },
+    price: { type: Number, required: true },
+    ingredients: [String],
     imageUrl: { type: String },
-    items: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Item'
-    }]
-});
+    availability: { type: Boolean, default: true }
+}, { timestamps: true });
 
-const menuSchema = Schema({
-    restaurantId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Restaurant',
-        required: true
-    },
-    categories: [categorySchema],
-    active: {
-        type: Boolean,
-        default: true
-    }
-},
-    {
-        timestamps: true
-    });
+const Menu = mongoose.model('Menu', menuSchema);
+module.exports = Menu;
 
-const Option = model('Option', optionSchema);
-const Customization = model('Customization', customizationSchema);
-const Item = model('Item', itemSchema);
-const Category = model('Category', categorySchema);
-const Menu = model('Menu', menuSchema);
-
-module.exports = { Option, Customization, Item, Category, Menu };
-
-
-/*
-{
+/*const menuDocumentExample = {
+  "_id": "60b8d295f1c2f4a8c1d42c72",
   "restaurantId": "60b8d295f1c2f4a8c1d42c70",
-  "categories": [
-    {
-      "name": "Appetizers",
-      "description": "Start your meal with our delicious appetizers",
-      "imageUrl": "http://example.com/images/appetizers.jpg",
-      "items": [
-        {
-          "name": "Spring Rolls",
-          "description": "Crispy rolls stuffed with vegetables",
-          "price": 5.99,
-          "imageUrl": "http://example.com/images/spring_rolls.jpg",
-          "available": true,
-          "customizations": [
-            {
-              "name": "Sauce",
-              "required": true,
-              "multiple": false,
-              "options": [
-                {
-                  "name": "Sweet Chili",
-                  "additionalPrice": 0.5
-                },
-                {
-                  "name": "Soy Sauce",
-                  "additionalPrice": 0
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "active": true
-}
+  "categoryId": "60b8d295f1c2f4a8c1d42c74",
+  "name": "Grilled Salmon",
+  "description": "Fresh Atlantic salmon grilled to perfection, served with roasted vegetables and lemon butter sauce.",
+  "price": 24.99,
+  "ingredients": ["Salmon", "Lemon", "Butter", "Vegetables"],
+  "imageUrl": "http://example.com/images/grilled_salmon.jpg",
+  "availability": true,
+  "createdAt": "2024-05-30T12:00:00.000Z",
+  "updatedAt": "2024-05-30T12:00:00.000Z"
+};
 
-*/
+module.exports = menuDocumentExample;*/
