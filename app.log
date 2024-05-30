@@ -1,7 +1,0 @@
-[0mPOST /api/v1/user/login-user [32m200[0m 131.509 ms - 433[0m
-[0mDELETE /api/v1/user/logout-user [32m204[0m 194.633 ms - -[0m
-[0mPOST /api/v1/user/login-user [32m200[0m 110.967 ms - 433[0m
-[0mDELETE /api/v1/user/logout-user [32m204[0m 220.757 ms - -[0m
-[0mDELETE /api/v1/user/logout-user [31m500[0m 90.237 ms - 69[0m
-[0mDELETE /api/v1/user/logout-user [31m500[0m 96.997 ms - 69[0m
-[0mDELETE /api/v1/user/logout-user [31m500[0m 117.004 ms - 69[0m

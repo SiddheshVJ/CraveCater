@@ -32,7 +32,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
     }
 })
 
-
 // User Login
 export const loginUser = asyncHandler(async (req, res, next) => {
     try {
@@ -52,14 +51,21 @@ export const loginUser = asyncHandler(async (req, res, next) => {
         const accessToken = await signAccessToken(userExists.id)
         const refreshToken = await signRefreshToken(userExists.id)
 
-        res.send({ accessToken, refreshToken })
+
+        res.cookie("accessToken", accessToken);
+        res.cookie("refreshToken", refreshToken);
+
+        res.send({
+            success: true,
+            userExists,
+            accessToken,
+        });
 
     } catch (error) {
         if (error.isJoi === true) return next(createError.BadRequest("Invalid Username or Password."))
         next(error)
     }
 })
-
 
 
 // Refresh Token
@@ -78,10 +84,10 @@ export const refreshToken = asyncHandler(async (req, res, next) => {
 })
 
 // Logout
-export const logoutUser = asyncHandler(async (req, res) => {
+export const logoutUser = asyncHandler(async (req, res, next) => {
     try {
-        const { refreshToken } = req.body
-        if (!refreshToken) throw createError.BadRequest()
+        const { refreshToken } = req.cookies
+        if (!refreshToken) throw createError.BadRequest('You are not logged in.')
         const userId = await verifyRefreshToken(refreshToken)
 
         redis.del(userId, (err, value) => {
@@ -89,11 +95,16 @@ export const logoutUser = asyncHandler(async (req, res) => {
                 console.log(err.message)
                 throw createError.InternalServerError()
             }
-            console.log(value)
-            res.sendStatus(204)
+
+            res.cookie("accessToken", "", { maxAge: 1 });
+            res.cookie("refreshToken", "", { maxAge: 1 });
+            res.send({
+                success: true,
+                message: 'Logout Successful.'
+            });
         })
     } catch (error) {
-        networkInterfaces(error)
+        next(error)
     }
 })
 
